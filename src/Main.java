@@ -1,27 +1,28 @@
 import com.library.repository.UserDAO;
-import java.util.Scanner;
+import java.io.Console;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to the Library");
         System.out.println("Please login.");
 
-        Scanner scanner = new Scanner(System.in);
+        Console console = System.console();
 
-        System.out.print("Username: ");
-        String inputUsername = scanner.nextLine();
+        if (console == null) {
+            System.out.println("No console available. Run from a terminal.");
+            return;
+        }
 
-        System.out.print("Password: ");
-        String inputPassword = scanner.nextLine();
+        String username = console.readLine("Username: ");
+        char[] passwordChars = console.readPassword("Password: ");
+        String password = new String(passwordChars);
 
         UserDAO userDAO = new UserDAO();
 
-        if (userDAO.login(inputUsername, inputPassword)) {
+        if (userDAO.login(username, password)) {
             System.out.println("Login successful");
         } else {
             System.out.println("Invalid credentials");
         }
-
-        scanner.close();
     }
 }
