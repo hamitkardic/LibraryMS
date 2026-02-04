@@ -11,6 +11,29 @@ public class LibraryFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        JMenuBar menuBar = new JMenuBar();
+
+        menuBar.setLayout(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+
+        JMenuItem logoutItem = new JMenuItem("Logout");
+        JMenuItem exitItem = new JMenuItem("Exit");
+
+        JLabel separator = new JLabel("|");
+
+        menuBar.add(logoutItem);
+        menuBar.add(separator);
+        menuBar.add(exitItem);
+
+        setJMenuBar(menuBar);
+
+        logoutItem.addActionListener(e -> {
+           dispose();
+           new LoginFrame();
+        });
+
+        exitItem.addActionListener(e -> System.exit(0));
+
+
         JLabel welcomeLabel = new JLabel("Welcome to the library, " + username, SwingConstants.CENTER);
 
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
