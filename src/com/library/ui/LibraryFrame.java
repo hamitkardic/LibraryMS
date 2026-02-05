@@ -3,6 +3,7 @@ package com.library.ui;
 import javax.swing.*;
 import java.awt.*;
 
+
 public class LibraryFrame extends JFrame {
 
     public LibraryFrame(String username) {
@@ -15,13 +16,15 @@ public class LibraryFrame extends JFrame {
 
         menuBar.setLayout(new FlowLayout(FlowLayout.RIGHT, 8, 0));
 
+
+        JMenuItem settingsItem = new JMenuItem("Settings");
         JMenuItem logoutItem = new JMenuItem("Logout");
         JMenuItem exitItem = new JMenuItem("Exit");
 
-        JLabel separator = new JLabel("|");
-
+        menuBar.add(settingsItem);
+        menuBar.add(separator());
         menuBar.add(logoutItem);
-        menuBar.add(separator);
+        menuBar.add(separator());
         menuBar.add(exitItem);
 
         setJMenuBar(menuBar);
@@ -35,12 +38,15 @@ public class LibraryFrame extends JFrame {
 
 
         JLabel welcomeLabel = new JLabel("Welcome to the library, " + username, SwingConstants.CENTER);
-
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
-
         add(welcomeLabel, BorderLayout.CENTER);
         setVisible(true);
 
 
+    }
+
+        private JLabel separator() {
+        JLabel sep = new JLabel("|");
+        return sep;
     }
 }
