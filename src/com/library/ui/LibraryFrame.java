@@ -45,14 +45,48 @@ public class LibraryFrame extends JFrame {
 
         contentPanel.add(welcomeLabel, BorderLayout.NORTH);
 
-        JPanel booksGrid = new JPanel(new GridLayout(0, 3, 8, 8));
-        booksGrid.setBorder(new EmptyBorder(10, 0, 0, 0));
+        JPanel booksGrid = new JPanel(new GridBagLayout());
 
-        booksGrid.add(createBookCard("The Count of Monte Cristo", "Alexandre Dumas"));
-        booksGrid.add(createBookCard("The Hobbit", "J.R.R. Tolkien"));
-        booksGrid.add(createBookCard("Metamorphosis", "Franz Kafka"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 1;
 
-        JScrollPane scrollPane = new JScrollPane(booksGrid);
+        java.util.List<String[]> books = java.util.Arrays.asList(
+                new String[]{"The Count of Monte Cristo", "Alexandre Dumas"},
+                new String[]{"The Hobbit", "J.R.R. Tolkien"},
+                new String[]{"Metamorphosis", "Franz Kafka"}
+        );
+
+        int column = 0;
+        int row = 0;
+        int columnsPerRow = 3;
+
+        for (String[] book : books) {
+            gbc.gridx = column;
+            gbc.gridy = row;
+            gbc.anchor = GridBagConstraints.NORTHWEST;
+            gbc.weighty = 0;
+
+            booksGrid.add(createBookCard(book[0], book[1]), gbc);
+
+            column++;
+            if (column == columnsPerRow) {
+                column = 0;
+                row++;
+            }
+        }
+
+        GridBagConstraints filler = new GridBagConstraints();
+        filler.gridx = 0;
+        filler.gridy = row + 1;
+        filler.weighty = 1;
+        booksGrid.add(Box.createVerticalGlue(), filler);
+
+
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        wrapper.add(booksGrid);
+        JScrollPane scrollPane = new JScrollPane(wrapper);
         scrollPane.setBorder(null);
 
         contentPanel.add(scrollPane, BorderLayout.CENTER);
@@ -86,12 +120,12 @@ public class LibraryFrame extends JFrame {
         authorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         textPanel.add(titleLabel);
-        textPanel.add(Box.createVerticalStrut(6));
-        textPanel.add(authorLabel);
-
         card.add(textPanel, BorderLayout.CENTER);
 
-        card.setPreferredSize(new Dimension(0, 120));
+        card.add(authorLabel, BorderLayout.SOUTH);
+
+        card.setPreferredSize(new Dimension(150, 200));
+        card.setMaximumSize(new Dimension(180, 220));
 
         return card;
     }
