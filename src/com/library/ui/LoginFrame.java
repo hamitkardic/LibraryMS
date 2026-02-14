@@ -9,6 +9,7 @@ import javax.swing.border.LineBorder;
 
 public class LoginFrame extends JFrame {
     public LoginFrame() {
+
         setTitle("Library Login");
         setSize(350, 200);
         setLocationRelativeTo(null);
@@ -28,6 +29,7 @@ public class LoginFrame extends JFrame {
         errorLabel.setForeground(Color.RED);
 
         usernameField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+
             public void insertUpdate(javax.swing.event.DocumentEvent e) { clearError(); }
             public void removeUpdate(javax.swing.event.DocumentEvent e) { clearError(); }
             public void changedUpdate(javax.swing.event.DocumentEvent e) { clearError(); }
@@ -61,20 +63,21 @@ public class LoginFrame extends JFrame {
         setVisible(true);
 
         loginButton.addActionListener(e -> {
+
             String username = usernameField.getText().stripTrailing();
             String password = new String(passwordField.getPassword());
 
             UserDAO userDAO = new UserDAO();
 
             if (username.isEmpty()) {
-                errorLabel.setText("Username is empty !");
+                errorLabel.setText("Username is empty!");
                 usernameField.setBorder(redBorder);
                 shakeWindow();
                 return;
             }
 
             if (password.isEmpty()) {
-                errorLabel.setText("Password is empty !");
+                errorLabel.setText("Password is empty!");
                 passwordField.setBorder(redBorder);
                 shakeWindow();
                 return;
@@ -83,28 +86,37 @@ public class LoginFrame extends JFrame {
             if (userDAO.login(username, password)) {
                 dispose();
                 new LibraryFrame(username);
-            } else {
-                errorLabel.setText("Invalid credentials !");
-                passwordField.setBorder(redBorder);
+            }
+
+            else {
                 passwordField.setText("");
+                usernameField.setBorder(redBorder);
+                passwordField.setBorder(redBorder);
+                errorLabel.setText("Invalid credentials!");
                 shakeWindow();
             }
         });
     }
+
     private void shakeWindow() {
         Point originalLocation = getLocation();
-        int shakeDistance = 10;
+
+        int shakeDistance = 5;
         int shakeTimes = 10;
 
         new Thread(() -> {
+
             try {
                 for (int i = 0; i < shakeTimes; i++) {
                     setLocation(originalLocation.x + (i % 2 == 0 ? shakeDistance : -shakeDistance),
                             originalLocation.y);
                     Thread.sleep(15);
                 }
+
                 setLocation(originalLocation);
+
             } catch (InterruptedException ignored) {}
+
         }).start();
     }
 }
