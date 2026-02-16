@@ -7,6 +7,22 @@ import java.awt.*;
 
 public class LibraryFrame extends JFrame {
 
+    private java.util.List<Book> books = new java.util.ArrayList<>();
+    private JPanel booksGrid;
+
+    private static class Book {
+        private String title;
+        private String author;
+
+        public Book(String title, String author) {
+            this.title = title;
+            this.author = author;
+        }
+
+        public String getTitle() { return title; }
+        public String getAuthor() { return author; }
+    }
+
     public LibraryFrame(String username) {
         setTitle("Library Management System");
         setSize(600, 400);
@@ -37,38 +53,66 @@ public class LibraryFrame extends JFrame {
 
         exitItem.addActionListener(e -> System.exit(0));
 
+        books.add(new Book("The Count of Monte Cristo", "Alexandre Dumas"));
+        books.add(new Book("The Hobbit", "J.R.R. Tolkien"));
+        books.add(new Book("Metamorphosis", "Franz Kafka"));
+
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         JLabel welcomeLabel = new JLabel("Welcome, " + username);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
-        contentPanel.add(welcomeLabel, BorderLayout.NORTH);
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(welcomeLabel, BorderLayout.WEST);
 
-        JPanel booksGrid = new JPanel(new GridBagLayout());
+        JButton addBookButton = new JButton("+ Add Book");
+        topPanel.add(addBookButton, BorderLayout.EAST);
+
+        contentPanel.add(topPanel, BorderLayout.NORTH);
+
+        booksGrid = new JPanel(new GridBagLayout());
+
+        renderBooks();
+
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        wrapper.add(booksGrid);
+        JScrollPane scrollPane = new JScrollPane(wrapper);
+        scrollPane.setBorder(null);
+
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+
+        add(contentPanel);
+
+        addBookButton.addActionListener(e -> {
+            String title = JOptionPane.showInputDialog(this, "Enter book title:");
+            if (title == null || title.trim().isEmpty()) return;
+
+            String author = JOptionPane.showInputDialog(this, "Enter author name:");
+            if (author == null || author.trim().isEmpty()) return;
+
+            books.add(new Book(title.trim(), author.trim()));
+            renderBooks();
+        });
+
+        setVisible(true);
+    }
+
+    private void renderBooks() {
+        booksGrid.removeAll();
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 8, 8, 8);
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.weightx = 1;
-
-        java.util.List<String[]> books = java.util.Arrays.asList(
-                new String[]{"The Count of Monte Cristo", "Alexandre Dumas"},
-                new String[]{"The Hobbit", "J.R.R. Tolkien"},
-                new String[]{"Metamorphosis", "Franz Kafka"}
-        );
+        gbc.anchor = GridBagConstraints.NORTHWEST;
 
         int column = 0;
         int row = 0;
         int columnsPerRow = 3;
 
-        for (String[] book : books) {
+        for (Book book : books) {
             gbc.gridx = column;
             gbc.gridy = row;
-            gbc.anchor = GridBagConstraints.NORTHWEST;
-            gbc.weighty = 0;
-
-            booksGrid.add(createBookCard(book[0], book[1]), gbc);
+            booksGrid.add(createBookCard(book.getTitle(), book.getAuthor()), gbc);
 
             column++;
             if (column == columnsPerRow) {
@@ -83,17 +127,8 @@ public class LibraryFrame extends JFrame {
         filler.weighty = 1;
         booksGrid.add(Box.createVerticalGlue(), filler);
 
-
-        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        wrapper.add(booksGrid);
-        JScrollPane scrollPane = new JScrollPane(wrapper);
-        scrollPane.setBorder(null);
-
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
-
-        add(contentPanel);
-
-        setVisible(true);
+        booksGrid.revalidate();
+        booksGrid.repaint();
     }
 
     private JPanel createBookCard(String title, String author) {
