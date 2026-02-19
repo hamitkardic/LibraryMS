@@ -3,25 +3,13 @@ package com.library.ui;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import com.library.model.Book;
 
 
 public class LibraryFrame extends JFrame {
 
     private java.util.List<Book> books = new java.util.ArrayList<>();
     private JPanel booksGrid;
-
-    private static class Book {
-        private String title;
-        private String author;
-
-        public Book(String title, String author) {
-            this.title = title;
-            this.author = author;
-        }
-
-        public String getTitle() { return title; }
-        public String getAuthor() { return author; }
-    }
 
     public LibraryFrame(String username) {
         setTitle("Library Management System");
@@ -129,6 +117,7 @@ public class LibraryFrame extends JFrame {
 
         booksGrid.revalidate();
         booksGrid.repaint();
+
     }
 
     private JPanel createBookCard(String title, String author) {
